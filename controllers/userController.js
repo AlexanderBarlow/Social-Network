@@ -30,7 +30,17 @@ createUser(req, res) {
 },
 //updateUser route which updates a user
 updateUser(req, res) {
-
+User.findOneAndUpdate(
+    { _id: req.params.courseId },
+    { $set: req.body },
+    { runValidators: true, new: true }
+)
+.then((user) => 
+    !user
+        ? res.status(404).json({ message: 'No user with this Id.' })
+        :res.json(user)
+)
+.catch((err) => res.status(500).json(err))
 },
 //deleteUser route which deletes a user
 deleteUser(req, res) {
