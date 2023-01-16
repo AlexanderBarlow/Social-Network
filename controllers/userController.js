@@ -24,7 +24,9 @@ getSingleUser(req, res) {
 },
 //createUser route which creates a single user
 createUser(req, res) {
-
+    User.create(req.body)
+        .then((user) => res.json(user))
+        .catch((err) => res.status(500).json(err));
 },
 //updateUser route which updates a user
 updateUser(req, res) {
