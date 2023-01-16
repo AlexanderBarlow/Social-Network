@@ -44,14 +44,22 @@ User.findOneAndUpdate(
 },
 //deleteUser route which deletes a user
 deleteUser(req, res) {
-    User.findOneAndDelete({ _id: req.params.id })
+    User.findOneAndDelete({ _id: req.params.userId })
         .then((user) => 
             !user
                 ? res.status(404).json({ message: 'No user with that Id.' })
-                : res.deleteMany({ _id: { $in: user.thoughts } })
+                : User.findOneandUpdate(
+                    { user: req.params.userId },
+                    { $pull: { user: req.params.usrId } },
+                    { new: true }
+                )
         )
-        .then(() => res.json({ message: 'User with thoughts have been deleted.' }))
-        .catch((err) => res.status(500).json(err));
+        .then((thoughts) => 
+            !thoughts
+                ? res.json({ message: 'User deleted, but no thoughts were found.' })
+                : res.json({ message: 'User successfully deleted.'})
+                )
+                .catch((err) => res.status(500).json(err));
 },
 //addFriend route which adds a friend to a user
 addFriend(req, res) {
