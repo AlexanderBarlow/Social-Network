@@ -44,7 +44,14 @@ User.findOneAndUpdate(
 },
 //deleteUser route which deletes a user
 deleteUser(req, res) {
-
+    User.findOneAndDelete({ _id: req.params.id })
+        .then((user) => 
+            !user
+                ? res.status(404).json({ message: 'No user with that Id.' })
+                : res.deleteMany({ _id: { $in: user.thoughts } })
+        )
+        .then(() => res.json({ message: 'User with thoughts have been deleted.' }))
+        .catch((err) => res.status(500).json(err));
 },
 //addFriend route which adds a friend to a user
 addFriend(req, res) {
