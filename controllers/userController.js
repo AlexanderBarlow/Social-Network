@@ -9,7 +9,18 @@ getUser(req, res) {
 },
 //getSingleUser route which finds a single user
 getSingleUser(req, res) {
-
+    User.findOne({ _id: req.params.userId })
+    .select('-__v')
+    .lean()
+    .then(async (user) => 
+        !user
+            ?res.status(404).json({ message: 'No user with this id was found.' })
+            :res.json({user,})
+            )
+            .catch((err) => {
+                console.log(err);
+                return res.status(500).json(err);
+            });
 },
 //createUser route which creates a single user
 createUser(req, res) {
