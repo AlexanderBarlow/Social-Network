@@ -55,10 +55,34 @@ deleteUser(req, res) {
 },
 //addFriend route which adds a friend to a user
 addFriend(req, res) {
-
+User.findOneAndUpdate(
+    { _id: req.params.userId },
+    { $addToSet: { friends: req.params.friendId }},
+    { runValidators: true, new:true }
+)
+    .then((user) => 
+        !user  
+            ?res
+                .status(404)
+                .json({ message: 'No user found with this Id. '})
+            : res.json(user)
+            )
+            .catch((err) => res.status(500).json(err));
 },
 //deleteFriend which deletes a friend per user
 deleteFriend(req, res) {
-
+    User.findOneAndUpdate(
+        { _id: req.params.userId },
+        { $pull: { friends: req.params.friendId } },
+        { runValidators: true, new: true }
+    )
+        .then((user) =>
+            !user
+                ? res
+                    .status(400)
+                    .json({ message: 'No user found with this Id.' })
+                :res.json(user)
+            )
+            .catch((err) => res.status(500).json(err));
 },
 };
