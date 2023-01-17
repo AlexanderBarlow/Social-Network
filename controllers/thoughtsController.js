@@ -21,7 +21,9 @@ getSingleThought(req, res) {
 },
 //add createThought route
 createThought(req, res) {
-
+    Thought.create(req.body)
+        .then((thought) => res.json(thought))
+        .catch((err) => res.status(500).json(err))
 },
 //add updateThought route
 updateThought(req, res) {
