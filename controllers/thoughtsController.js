@@ -40,8 +40,23 @@ updateThought(req, res) {
                 .catch((err) => res.status(500).json(err));
 },
 //add deleteThough route
-deletThought(req, res) {
-
+deleteThought(req, res) {
+    Thought.findOneAndDelete({ _id: req.params.thoughtId })
+        .then((thought) =>
+        !thought
+            ? res.status(404).json({ message: 'No thought with that Id.' })
+            : User.findOneAndUpdate(
+                { thoughts: req.params.thoughtId },
+                { $pull: { thoughts: req.params.thoughtId } },
+                { new: true }
+                )
+            )
+            .then((user) => 
+            !user
+                ? res.status(404).json({ message: 'Thought deleted, but no User was found.'})
+                : res.json({ message: 'Thought was deleted successfully.'})
+                )
+                .catch((err) => res.status(500).json(err));
 },
 //add createReaction route
 createReaction(req, res) {
