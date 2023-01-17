@@ -9,7 +9,15 @@ Thought.find({})
 },
 //add getSingleThought route
 getSingleThought(req, res) {
-
+    Thought.findOne({ _id: req.params.thoughtId })
+        .select('-__v')
+        .lean()
+        .then(async (thought) => 
+            !thought
+                ? res.status(404).json({ message: 'No thought with that Id found.' })
+                : res.json(thought)
+                )
+                .catch((err) => res.status(500).json(err));
 },
 //add createThought route
 createThought(req, res) {
