@@ -31,7 +31,7 @@ createUser(req, res) {
 //updateUser route which updates a user
 updateUser(req, res) {
 User.findOneAndUpdate(
-    { _id: req.params.courseId },
+    { _id: req.params.userId },
     { $set: req.body },
     { runValidators: true, new: true }
 )
