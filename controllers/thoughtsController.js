@@ -38,7 +38,7 @@ createThought(req, res) {
 },
 //add updateThought route
 updateThought(req, res) {
-    Thought.findOneAndDelete(
+    Thought.findOneAndUpdate(
         { _id: req.params.thoughtId },
         { $set: req.body },
         { runValidators: true, new: true }
