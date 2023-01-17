@@ -22,8 +22,19 @@ getSingleThought(req, res) {
 //add createThought route
 createThought(req, res) {
     Thought.create(req.body)
-        .then((thought) => res.json(thought))
-        .catch((err) => res.status(500).json(err))
+        .then(({ _id }) => {
+            return User.findOneAndUpdate(
+                { _id: req.body.userId },
+                { $push: { thoughts: _id } },
+                { new: true }
+            );
+        })
+        .then((thought) => 
+            !thought
+                ? res.status(404).json({ message: 'No user found with this Id.' })
+                : res.json(thought)
+            )
+        .catch((err) => res.status(500).json(err));
 },
 //add updateThought route
 updateThought(req, res) {
